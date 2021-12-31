@@ -339,18 +339,18 @@ class Scale:
 #     print(grid.poseFromGridCoord(200, 100))
 #     print(200*0.054 - 700*0.054/2, -100*0.054 + 490*0.054/2)
 '''test for TrajectoryReader (comment the lines below when using)'''
-if __name__ == '__main__':
-    root_path = os.getcwd()
-    map_path = os.path.join(root_path, 'maps/map.png')
-    map = cv2.imread(map_path)
-    grid = OccupancyGrid(map, 0.054)
-    delta_t = 0.1
-    trajectories = TrajReader('crowds_zara01', delta_t)
-    time = 0.0
-    while True:
-        trajectories.update_ogmap(grid, time)
-        time += delta_t
-        if time > 35:
-            time = 0.0
-        cv2.imshow('grid map', grid.grid.reshape(map.shape[0:2]))
-        cv2.waitKey()
+# if __name__ == '__main__':
+#     root_path = os.getcwd()
+#     map_path = os.path.join(root_path, 'maps/map.png')
+#     map = cv2.imread(map_path)
+#     grid = OccupancyGrid(map, 0.054)
+#     delta_t = 0.1
+#     trajectories = TrajReader('crowds_zara01', delta_t)
+#     time = 0.0
+#     while True:
+#         trajectories.update_ogmap(grid, time)
+#         time += delta_t
+#         if time > 35:
+#             time = 0.0
+#         cv2.imshow('grid map', grid.grid.reshape(map.shape[0:2]))
+#         cv2.waitKey()
