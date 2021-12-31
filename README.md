@@ -1,7 +1,7 @@
 # BiRiskRRTValidation
-**************
+
 ### _*.py_ Files Explanation
-************************************
+
 * _riksrrt.py_
   * Implement unidirectional RiskRRT. 
 
@@ -19,9 +19,9 @@
 
 * _result_analysis.py_
   * compute and print the mean values and standard values of the trails conducted by _main.py_.
-
-### Folders Introduction
 ***************************
+### Folders Introduction
+
 * ___/data___
   * This folder stores the data of dynamic pedestrians from different datasets.
 
