@@ -343,7 +343,7 @@ class RiskRRT:
         while parent:
             traj.append(parent)
             parent = parent.parent
-        return traj
+        return traj[::-1]
 
     def getNewObsPrediction(self, time):
         """

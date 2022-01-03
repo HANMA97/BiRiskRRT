@@ -68,6 +68,7 @@ class Node:
 class OccupancyGrid:
     def __init__(self, image_map, resolution):
         self.map = image_map.copy()
+        self.static_map = self.map.copy()
         self.resolution = resolution
         self.origin_offset_x = self.map.shape[1] * self.resolution / 2
         self.origin_offset_y = -self.map.shape[0] * self.resolution / 2
@@ -324,6 +325,65 @@ class Scale:
             self.bound_list.append([-7.0, +4.0])
         else:
             self.bound_list = [[0.0, 0.0]] * 4
+
+
+def generateSimulationVideo(traj, ogmap, save_path, trajReader=None, mode='static'):
+    """
+    Function to generate simulation video from frames
+    :param traj: Trajectory provided by the planner (Node list)
+    :param ogmap: OccupancyGrid
+    :param trajReader: trajReader for pedestrian positions
+    :param mode: 'static' / 'dynamic'
+    :return:
+    """
+    frames = []
+    for node in traj:
+        curr_frame = ogmap.static_map.copy()
+        pose = node.pose
+        corner1 = np.array([0.75, 0.35])
+        corner2 = np.array([0.75, - 0.35])
+        corner3 = np.array([- 0.75, - 0.35])
+        corner4 = np.array([- 0.75, 0.35])
+        rotate_matrix = np.array([[math.cos(pose.theta), -math.sin(pose.theta)],
+                                  [math.sin(pose.theta), math.cos(pose.theta)]])
+        corner1 = rotate_matrix.dot(corner1)
+        corner2 = rotate_matrix.dot(corner2)
+        corner3 = rotate_matrix.dot(corner3)
+        corner4 = rotate_matrix.dot(corner4)
+        pose1 = Custom_pose()
+        pose1.x = corner1[0] + pose.x
+        pose1.y = corner1[1] + pose.y
+        pose2 = Custom_pose()
+        pose2.x = corner2[0] + pose.x
+        pose2.y = corner2[1] + pose.y
+        pose3 = Custom_pose()
+        pose3.x = corner3[0] + pose.x
+        pose3.y = corner3[1] + pose.y
+        pose4 = Custom_pose()
+        pose4.x = corner4[0] + pose.x
+        pose4.y = corner4[1] + pose.y
+        coord1 = [ogmap.gridIFromPose(pose1), ogmap.gridJFromPose(pose1)]
+        coord2 = [ogmap.gridIFromPose(pose2), ogmap.gridJFromPose(pose2)]
+        coord3 = [ogmap.gridIFromPose(pose3), ogmap.gridJFromPose(pose3)]
+        coord4 = [ogmap.gridIFromPose(pose4), ogmap.gridJFromPose(pose4)]
+        contours = np.array([coord1, coord2, coord3, coord4])
+        cv2.fillPoly(curr_frame, pts=[contours], color=(255, 0, 0))
+        if mode == 'dynamic':
+            ped_poses = trajReader.get_traj(node.time)
+            for ped_pose in ped_poses:
+                temp_pose = Custom_pose()
+                temp_pose.x = ped_pose[1] + trajReader.scale.offset_x
+                temp_pose.y = ped_pose[2] + trajReader.scale.offset_y
+                ped_grid_i = ogmap.gridIFromPose(temp_pose)
+                ped_grid_j = ogmap.gridJFromPose(temp_pose)
+                cv2.circle(curr_frame, (ped_grid_i, ped_grid_j), radius=8, color=[255, 255, 0], thickness=-1)
+
+        frames.append(curr_frame)
+
+    out = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'DIVX'), 8, (ogmap.width, ogmap.height))
+    for i in range(len(frames)):
+        out.write(frames[i])
+    out.release()
 
 
 '''test for DccupancyGrid (comment the lines below when using)'''

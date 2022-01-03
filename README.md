@@ -60,3 +60,7 @@
 |Unidirectional Time           |  28.94s |  16.92s|
 |Unidirectional Cost           |  48.02m |  4.1m |
 |Unidirectional Navigation Time|  34.52s |  3.61s |
+
+
+<video src="results/video/video.avi" controls="controls" width="500" height="500"></video>
+

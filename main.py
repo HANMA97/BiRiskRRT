@@ -1,6 +1,6 @@
 from biriskrrt import BiRiskRRT, BiRiskRRTPed
 from param import BiParams
-from utils import OccupancyGrid
+from utils import OccupancyGrid, generateSimulationVideo
 import cv2
 import time
 import numpy as np
@@ -8,7 +8,7 @@ import os
 
 data_name = 'crowds_zara01'
 root_path = os.getcwd()
-experiment_times = 100
+experiment_times = 1
 bidirectional = True
 # bidirectional = False
 having_pedestrian = True
@@ -16,6 +16,7 @@ having_pedestrian = True
 map_resolution = 0.054 # meter/pixel
 
 results_path = os.path.join(root_path, 'results')
+video_path = os.path.join(root_path, 'results', 'video')
 visualization_path = os.path.join(results_path, 'visualizations')
 map_path = os.path.join(root_path, 'maps/map.png')
 if having_pedestrian:
@@ -64,7 +65,16 @@ for i in range(experiment_times):
     print('Planning time: ', end - start)
     print('Trajectory cost: ', traj[0].cost)
     print('Trajectory navigation time: ', planner.goal_node.time)
-
+    if having_pedestrian:
+        generateSimulationVideo(traj, planner.ogmap,
+                                os.path.join(video_path, 'video.avi'),
+                                trajReader=planner.trajectorReader,
+                                mode='dynamic')
+    else:
+        generateSimulationVideo(traj, planner.ogmap,
+                                os.path.join(video_path, 'video.avi'),
+                                trajReader=planner.trajectorReader,
+                                mode='static')
     for node in traj:
         center_coordinates = [planner.ogmap.gridIFromPose(node.pose), planner.ogmap.gridJFromPose(node.pose)]
         planner.ogmap.map = cv2.circle(planner.ogmap.map, center_coordinates, 5, [0, 0, 255], -1)
