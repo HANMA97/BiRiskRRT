@@ -368,7 +368,7 @@ def generateSimulationVideo(traj, ogmap, save_path, trajReader=None, mode='stati
         coord3 = [ogmap.gridIFromPose(pose3), ogmap.gridJFromPose(pose3)]
         coord4 = [ogmap.gridIFromPose(pose4), ogmap.gridJFromPose(pose4)]
         contours = np.array([coord1, coord2, coord3, coord4])
-        cv2.fillPoly(curr_frame, pts=[contours], color=(255, 0, 0))
+        cv2.fillPoly(curr_frame, pts=[contours], color=(0, 0, 255))
         if mode == 'dynamic':
             ped_poses = trajReader.get_traj(node.time)
             for ped_pose in ped_poses:
@@ -377,7 +377,7 @@ def generateSimulationVideo(traj, ogmap, save_path, trajReader=None, mode='stati
                 temp_pose.y = ped_pose[2] + trajReader.scale.offset_y
                 ped_grid_i = ogmap.gridIFromPose(temp_pose)
                 ped_grid_j = ogmap.gridJFromPose(temp_pose)
-                cv2.circle(curr_frame, (ped_grid_i, ped_grid_j), radius=8, color=[255, 255, 0], thickness=-1)
+                cv2.circle(curr_frame, (ped_grid_i, ped_grid_j), radius=8, color=[255, 140, 0], thickness=-1)
 
         frames.append(curr_frame)
 
