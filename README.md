@@ -37,11 +37,11 @@
   #### Unidirectional RiskRRT (_crowds_zara01_)
   ![RiskRRT_Ped](results/visualizations/tree1.png)
   #### Bidirectional RiskRRT (_crowds_zara01_, connect heuristic step = 3)
-  ![BiRiskRRT_Ped](results/visualizations/bitree13.png)
+  ![BiRiskRRT_Ped](results/visualizations/bitree10.png)
 
 ****************************
 ### Demo in Dynamic Environment
-![](results/video/video.gif)
+![](results/video/navi_dynamic0.gif)
 ************************************
 ### Current Results (Dynamic '_crowds_zara01_')
 | Items | Means | Standard Error|

@@ -4,6 +4,7 @@ import math
 from scipy.interpolate import interp1d
 import os
 import glob
+import imageio
 
 
 class Custom_pose:
@@ -380,10 +381,11 @@ def generateSimulationVideo(traj, ogmap, save_path, trajReader=None, mode='stati
 
         frames.append(curr_frame)
 
-    out = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'MP4V'), 8, (ogmap.width, ogmap.height))
-    for i in range(len(frames)):
-        out.write(frames[i])
-    out.release()
+    imageio.mimsave(save_path, frames, fps=8)
+    # out = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'MP4V'), 8, (ogmap.width, ogmap.height))
+    # for i in range(len(frames)):
+    #     out.write(frames[i])
+    # out.release()
 
 
 '''test for DccupancyGrid (comment the lines below when using)'''
