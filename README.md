@@ -40,7 +40,9 @@
   ![BiRiskRRT_Ped](results/visualizations/bitree13.png)
 
 ****************************
-
+### Demo in Dynamic Environment
+![](results/video/video.gif)
+************************************
 ### Current Results (Dynamic '_crowds_zara01_')
 | Items | Means | Standard Error|
 | ----                         | ----      | ----  |
@@ -61,4 +63,4 @@
 |Unidirectional Cost           |  48.02m |  4.1m |
 |Unidirectional Navigation Time|  34.52s |  3.61s |
 
-![](results/video/video.avi)
+

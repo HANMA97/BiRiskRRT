@@ -67,12 +67,12 @@ for i in range(experiment_times):
     print('Trajectory navigation time: ', planner.goal_node.time)
     if having_pedestrian:
         generateSimulationVideo(traj, planner.ogmap,
-                                os.path.join(video_path, 'video.avi'),
+                                os.path.join(video_path, 'video.mp4'),
                                 trajReader=planner.trajectorReader,
                                 mode='dynamic')
     else:
         generateSimulationVideo(traj, planner.ogmap,
-                                os.path.join(video_path, 'video.avi'),
+                                os.path.join(video_path, 'video.mp4'),
                                 trajReader=planner.trajectorReader,
                                 mode='static')
     for node in traj:

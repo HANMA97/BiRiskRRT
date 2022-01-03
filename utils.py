@@ -380,7 +380,7 @@ def generateSimulationVideo(traj, ogmap, save_path, trajReader=None, mode='stati
 
         frames.append(curr_frame)
 
-    out = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'DIVX'), 8, (ogmap.width, ogmap.height))
+    out = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'MP4V'), 8, (ogmap.width, ogmap.height))
     for i in range(len(frames)):
         out.write(frames[i])
     out.release()
