@@ -69,9 +69,13 @@
   * ![](results/visualizations/tree_A_crowds_zara02_3.png)
   
   * ![](results/visualizations/bitree_A_crowds_zara02_3.png)
-* Navigation Demo
-![](results/video/navi_dynamic3.gif)
-![](results/video/bi_navi_dynamic3.gif)
+  
+* Navigation 
+
+  * ![](results/video/navi_dynamic3.gif)
+  
+  * ![](results/video/bi_navi_dynamic3.gif)
+
 #### Map A, '_crowds_zara03_'
 | Items | Means | Standard Error|
 | ----  | ----  | ----  |
@@ -81,11 +85,13 @@
 |Unidirectional time|  58.41 |  50.78|
 |Unidirectional cost|  44.15 |  6.0|
 |Navigation time|  31.2 |  3.95|
+
 * Random Trees Visualization
 
   * ![](results/visualizations/tree_A_crowds_zara03_2.png)
   
   * ![](results/visualizations/bitree_A_crowds_zara03_2.png)
+
 * Navigation Demo
 
   * ![](results/video/navi_dynamic_A_crowds_zara032.gif)
@@ -100,10 +106,12 @@
 |Unidirectional time|  36.29 |  28.96 |
 |Unidirectional cost|  34.77 |  5.1 |
 |Navigation time|  26.5 |  4.34 |
+
 * Random Trees Visualization
   * ![](results/visualizations/tree_B_crowds_zara01_6.png)
   
   * ![](results/visualizations/bitree_B_crowds_zara01_6.png)
+
 * Navigation Demo
 
   * ![](results/video/navi_dynamic_B_crowds_zara016.gif)
@@ -119,6 +127,7 @@
 |Unidirectional time|  43.58 |  111.15 |
 |Unidirectional cost|  34.31 |  4.57 |
 |Navigation time|  26.05 |  3.92 |
+
 * Random Trees Visualization
 
   * ![](results/visualizations/tree_B_crowds_zara02_7.png)
@@ -161,6 +170,7 @@
 |Unidirectional time|  54.04 |  73.82 |
 |Unidirectional cost|  36.1 |  1.95 |
 |Navigation time|  23.86 |  1.88 |
+
 * Random Trees Visualization
 
   * ![](results/visualizations/tree_C_crowds_zara01_9.png)
@@ -182,6 +192,7 @@
 |Unidirectional time|  53.68 |  65.25 |
 |Unidirectional cost|  36.12 |  1.69 |
 |Navigation time|  23.76 |  1.7 |
+
 * Random Trees Visualization
 
   * ![](results/visualizations/tree_C_crowds_zara02_5.png)
@@ -203,6 +214,7 @@
 |Unidirectional time|  54.79 |  69.66 |
 |Unidirectional cost|  36.29 |  2.05 |
 |Navigation time|  24.42 |  2.47 |
+
 * Random Trees Visualization
 
   * ![](results/visualizations/tree_C_crowds_zara03_17.png)
@@ -224,6 +236,7 @@
 |Unidirectional time|  42.44 |  72.96 |
 |Unidirectional cost|  44.53 |  6.74 |
 |Navigation time|  31.05 |  3.96 |
+
 * Navigation Demo
 
   * ![](results/video/navi_static_A_crowds_zara0211.gif)
@@ -255,6 +268,7 @@
 |Unidirectional time|  31.27 |  34.08 |
 |Unidirectional cost|  36.75 |  1.88 |
 |Navigation time|  24.36 |  1.99 |
+
 * Navigation Demo
 
   * ![](results/video/navi_static_C_crowds_zara0213.gif)
@@ -272,6 +286,7 @@
 |Unidirectional time|  5.28 |  4.05 |
 |Unidirectional cost|  25.15 |  1.91 |
 |Navigation time|  18.09 |  1.23 |
+
 * Random Trees Visualization
 
   * ![](results/visualizations/tree_blank_crowds_zara01_11.png)
@@ -296,15 +311,15 @@
 
 * Random Trees Visualization
 
-  * ![](results/visualizations/tree_blank_crowds_zara02_23.png)
+  * ![](results/visualizations/tree_blank_crowds_zara02_3.png)
   
-  * ![](results/visualizations/bitree_blank_crowds_zara02_23.png)
+  * ![](results/visualizations/bitree_blank_crowds_zara02_3.png)
 
 * Navigation Demo
 
-  * ![](results/video/navi_dynamic_blank_crowds_zara0223.gif)
+  * ![](results/video/navi_dynamic_blank_crowds_zara023.gif)
   
-  * ![](results/video/bi_navi_dynamic_blank_crowds_zara0223.gif)
+  * ![](results/video/bi_navi_dynamic_blank_crowds_zara023.gif)
 
 #### ' _crowds_zara03_'
 | Items | Means | Standard Error|
