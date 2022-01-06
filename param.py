@@ -1,3 +1,6 @@
+import math
+
+
 class Params:
     def __init__(self):
         # time step between each node (s)
@@ -38,10 +41,12 @@ class Params:
         self.accOmegaMax = 0.5
 
         # wait for reassigning
-        # self.start = [-16.5, 0.0, 0.0]
-        # self.goal = [14.5, 0.0, 3.14]
-        self.start = [0.0, -11.5, 1.57]
-        self.goal = [0.0, 11.5, -1.57]
+        # self.start = [0.0, -11.5, 1.57] # A and blank
+        # self.goal = [0.0, 11.5, -1.57] # A and blank
+        # self.start = [0.0, -11.5, 0.0]  # B
+        # self.goal = [0.0, 11.5, 0.0]  # B
+        self.start = [-11.5, -10.0, 0.0] # C
+        self.goal = [10.5, 10.0, math.pi] # C
 
 
 class BiParams(Params):
@@ -52,4 +57,4 @@ class BiParams(Params):
         self.connect_th = 1.0
         self.maxDepth = 300
         # connect heuristic steps (at least 1, i.e., no connect heuristic)
-        self.connect_heur = 3
+        self.connect_heur = 5
