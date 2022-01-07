@@ -6,12 +6,12 @@ import time
 import numpy as np
 import os
 
-data_name = 'crowds_zara01'
+data_name = 'static01'
 root_path = os.getcwd()
 experiment_times = 1
 bidirectional = True
 # bidirectional = False
-having_pedestrian = True
+having_pedestrian = False
 # having_pedestrian = False
 map_resolution = 0.054 # meter/pixel
 
@@ -38,32 +38,33 @@ for i in range(experiment_times):
     if having_pedestrian:
         planner = BiRiskRRTPed(param, ogmap, data_name)
     else:
-        planner = BiRiskRRT(param, ogmap)
+        planner = BiRiskRRT(param, ogmap, data_name)
 
     start = time.time()
     while True:
         if bidirectional:
-            planner.biGrow()
+            planner.bvp_biGrow()
         else:
             planner.grow()
         # cv2.imwrite('/home/mh/Desktop/bitree.png', planner.ogmap.map)
         if planner.terminate:
-            print('goal reached!')
+            print('two trees are linked!')
             break
     end = time.time()
 
-    traj = planner.findTraj()
+    # traj = planner.findTraj()
+    traj = planner.findlinkedTraj()
     if bidirectional:
         bi_time_list.append(end - start)
-        bi_cost_list.append(traj[0].cost)
+        bi_cost_list.append(traj[-1].cost)
         bi_nav_time.append(planner.goal_node.time)
     else:
         time_list.append(end - start)
-        cost_list.append(traj[0].cost)
+        cost_list.append(traj[-1].cost)
         nav_time.append(planner.goal_node.time)
 
     print('Planning time: ', end - start)
-    print('Trajectory cost: ', traj[0].cost)
+    print('Trajectory cost: ', traj[-1].cost)
     print('Trajectory navigation time: ', planner.goal_node.time)
     if having_pedestrian:
         generateSimulationVideo(traj, planner.ogmap,
@@ -81,7 +82,7 @@ for i in range(experiment_times):
         # print(node.pose)
 
     if bidirectional:
-        traj = planner.heur_path
+        traj = planner.re_traj
         print('bidirectional')
         for node in traj:
             center_coordinates = [planner.ogmap.gridIFromPose(node.pose), planner.ogmap.gridJFromPose(node.pose)]

@@ -32,10 +32,16 @@ class Params:
         self.vMax = 1.0
         # maximum linear acceleration (m/s^2)
         self.accMax = 0.5
+        self.accMin = -0.5
+        # minimum angular speed (rad/s)
+        self.omegaMin = -0.5
         # maximum angular speed (rad/s)
         self.omegaMax = 0.5
         # maximum angular acceleration (rad/s^2)
         self.accOmegaMax = 0.5
+        self.accOmegaMin = -0.5
+        self.acckaiMin = 0
+        self.acckaiMax = self.omegaMax/self.vMax
 
         # wait for reassigning
         # self.start = [-16.5, 0.0, 0.0]
@@ -52,4 +58,4 @@ class BiParams(Params):
         self.connect_th = 1.0
         self.maxDepth = 300
         # connect heuristic steps (at least 1, i.e., no connect heuristic)
-        self.connect_heur = 3
+        self.connect_heur = 1

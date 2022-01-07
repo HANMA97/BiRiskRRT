@@ -71,7 +71,6 @@ class RiskRRT:
 
     def discretizeVelocities(self, node):
         """
-
         :param node: Node
         :return:
         """
@@ -205,7 +204,6 @@ class RiskRRT:
                 if control_score >= best_control_score:
                     best_control_score = control_score
                     best_control_index = i
-
         if best_control_index == -1:
             return None
 
@@ -259,7 +257,6 @@ class RiskRRT:
 
     def robotKinematic(self, pose, control):
         """
-
         :param pose: Custom_pose
         :param control: Control
         :return: new_pose: Custom_pose

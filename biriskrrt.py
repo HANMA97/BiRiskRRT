@@ -1,7 +1,9 @@
+import copy
 import random
 
 from riskrrt import RiskRRT
 from utils import *
+from lqr import LQRPlanner
 
 # Radius of circle
 radius = 5
@@ -14,8 +16,9 @@ thickness = 2
 
 
 class BiRiskRRT(RiskRRT):
-    def __init__(self, params, ogmap):
+    def __init__(self, params, ogmap, data_name):
         super(BiRiskRRT, self).__init__(params, ogmap)
+        self.flip_reverse_path = None
         self.stddev = params.stddev
         self.heur_prob = params.heur_prob
         self.connect_th = params.connect_th
@@ -33,6 +36,14 @@ class BiRiskRRT(RiskRRT):
         self.initRootRev()
         # indicate the extend order of the forward tree and the reverse tree (int), set it to 0 when larger than 1000
         self.grow_iter_times = 0
+
+        self.last_node_of_f_tree = None
+        self.last_node_of_r_tree = None
+        self.fo_traj = []
+        self.re_traj = []
+        self.total_traj = []
+        self.data_name = data_name
+        self.trajectorReader = TrajReader(data_name, self.timeStep)
 
     def initRootRev(self):
         self.root_rev.time = 0.0
@@ -66,7 +77,6 @@ class BiRiskRRT(RiskRRT):
             if best_weight < current_weight and current_node.isOpen:
                 best_weight = current_weight
                 best_rated_node = current_node
-
         return best_rated_node
 
     def computeNodeWeightRev(self, node, goal):
@@ -126,7 +136,62 @@ class BiRiskRRT(RiskRRT):
             return True
         return False
 
-    def connect(self, new_node, extend, chooseBestNode, mode):
+    # def connect(self, new_node, extend, chooseBestNode, mode):
+    #     """
+    #     This function implements the connected heuristic in the original paper.
+    #     :param new_node: new extended node from the other tree
+    #     :param extend: extend function of current tree
+    #     :param chooseBestNode: chooseBestNode function of current tree
+    #     :param mode: string 'forward/reverse' (e.g., mode = 'forward' means new_node is from the forward tree)
+    #     :return:
+    #     """
+    #     assert mode == 'forward' or mode == 'reverse', 'This mode is not exist!'
+    #     if not new_node:
+    #         return
+    #     random_goal = Custom_pose()
+    #     random_goal.x = new_node.pose.x
+    #     random_goal.y = new_node.pose.y
+    #     random_goal.theta = new_node.pose.theta
+    #
+    #     for i in range(self.connect_heur):  # self.connect_heur steps heuristic extend
+    #         best_node_to_grow = chooseBestNode(random_goal)
+    #         new_node_prim = extend(best_node_to_grow, random_goal)
+    #         if new_node_prim and self.meet(new_node_prim, new_node):
+    #             if mode == 'forward':
+    #                 self.heur_path = self.getHeurTraj(new_node_prim)
+    #             elif mode == 'reverse':
+    #                 self.heur_path = self.getHeurTraj(new_node)
+    #             break
+    #         if not new_node_prim:
+    #             break
+
+    def flip_r_tree(self, last_node_of_f_tree, last_node_of_r_tree):
+        """
+        flip the depth, cost, time of the nodes in the reverse tree to let it be linked directly to the f tree.
+        :params:last node in the r tree.
+        :return: none
+        """
+        traj = [last_node_of_r_tree]
+        parent = last_node_of_r_tree.parent
+        costs = [last_node_of_r_tree.cost]
+        times = [last_node_of_r_tree.time]
+        depths = [last_node_of_r_tree.depth]
+        while parent:
+            traj.append(parent)
+            costs.append(parent.cost)
+            times.append(parent.time)
+            depths.append(parent.depth)
+            parent = parent.parent
+        costs.reverse()
+        times.reverse()
+        depths.reverse()
+        for i in range(len(traj)):
+            traj[i].cost = costs[i] + last_node_of_f_tree.cost
+            traj[i].time = times[i] + last_node_of_f_tree.time
+            traj[i].depth = depths[i] + last_node_of_f_tree.depth
+        self.goal_node = traj[-1]
+
+    def bvp_connect(self, new_node, extend, chooseBestNode, mode, lqr_steer):
         """
         This function implements the connected heuristic in the original paper.
         :param new_node: new extended node from the other tree
@@ -143,17 +208,59 @@ class BiRiskRRT(RiskRRT):
         random_goal.y = new_node.pose.y
         random_goal.theta = new_node.pose.theta
 
-        for i in range(self.connect_heur): # self.connect_heur steps heuristic extend
+        for i in range(self.connect_heur):  # self.connect_heur steps heuristic extend
             best_node_to_grow = chooseBestNode(random_goal)
             new_node_prim = extend(best_node_to_grow, random_goal)
             if new_node_prim and self.meet(new_node_prim, new_node):
-                if mode == 'forward':
-                    self.heur_path = self.getHeurTraj(new_node_prim)
-                elif mode == 'reverse':
-                    self.heur_path = self.getHeurTraj(new_node)
+                rx, ry, rt, rv, rk = lqr_steer.lqr_planning(new_node_prim,
+                                                            new_node)  # return linearized kinodynamic states between them
+                if rx is not None:
+                    middling_nodes = [new_node_prim]
+                    for j in range(1, len(rx)):
+                        middling_node = Node()
+                        middling_node.pose = Custom_pose()
+                        middling_node.pose.x = rx[j]
+                        middling_node.pose.y = ry[j]
+                        middling_node.pose.theta = rt[j]
+                        middling_node.vel = Twist(Linear(rv[j] * np.cos(rt[j]), rv[j] * np.sin(rt[j])),
+                                                  rv[j] * rk[j])
+                        middling_node.parent = middling_nodes[j - 1]
+                        middling_node.sons = []
+                        middling_node.possible_controls = []
+                        middling_node.isOpen = False
+                        middling_node.depth = middling_nodes[j - 1].depth + 1
+                        middling_node.time = middling_nodes[j - 1].time + self.timeStep
+                        middling_node.cost = self.euclideanDistance(middling_node, middling_nodes[j - 1]) + \
+                                             middling_nodes[j - 1].cost
+                        middling_node.risk = self.computeNodeRisk(middling_node)
+                        middling_node.isFree = (middling_node.risk <= self.threshold)
+                        middling_nodes[j - 1].sons.append(middling_node)
+                        a = copy.deepcopy(middling_node)
+                        middling_nodes.append(a)
+                    new_node_prim.sons.append(middling_nodes[1])
+                    self.last_node_of_f_tree = middling_nodes[-2]
+                    self.last_node_of_r_tree = new_node
+                    self.flip_r_tree(self.last_node_of_f_tree, self.last_node_of_r_tree)
+                self.terminate = True
+            else:
                 break
             if not new_node_prim:
                 break
+
+    def findlinkedTraj(self):
+        self.fo_traj.append(self.last_node_of_f_tree)
+        self.re_traj.append(self.last_node_of_r_tree)
+        parent0 = self.last_node_of_f_tree.parent
+        parent1 = self.last_node_of_r_tree.parent
+        while parent0:
+            self.fo_traj.append(parent0)
+            parent0 = parent0.parent
+        self.fo_traj = self.fo_traj[::-1]
+        while parent1:
+            self.re_traj.append(parent1)
+            parent1 = parent1.parent
+        self.total_traj = self.fo_traj + self.re_traj
+        return self.total_traj
 
     def chooseRandomGoalRev(self):
         """
@@ -171,52 +278,13 @@ class BiRiskRRT(RiskRRT):
             random_goal.theta = 0.0
         return random_goal
 
-    def biGrow(self):
-        """
-        Bidirectional growth with connected heuristic
-        :return:
-        """
-        # random sampling
-        if self.heur_path: # if heur_path is not empty, perform heuristic sampling. Extend only fwd tree.
-            # indicator = random.random()
-            # if indicator > self.heur_prob:
-            #     random_goal = self.heuristicSampling()
-            # else:
-            #     random_goal = self.chooseRandomGoal()
-            random_goal = self.heuristicSampling()
-            best_node_fwd = self.chooseBestNode(random_goal)
-            if best_node_fwd:
-                new_node_fwd = self.extend(best_node_fwd, random_goal)
-                # if new_node_fwd and self.euclideanDistance(new_node_fwd, self.root_rev) < self.heur_path[-1].cost:
-                #     # print('pop()')
-                #     self.heur_path.pop()
-        else: # if heur_path is empty, perform uniform random sampling. Extend fwd tree and rev tree.
-
-            if self.grow_iter_times % 2 == 0: # extend the forward tree first
-                # extend the forward tree according to random_goal
-                random_goal = self.chooseRandomGoal()
-                best_node_fwd = self.chooseBestNode(random_goal)
-                if best_node_fwd:
-                    new_node_fwd = self.extend(best_node_fwd, random_goal)
-                    self.connect(new_node_fwd, self.extendRev, self.chooseBestNodeRev, 'forward')
-            else: # extend the reverse tree first
-                random_goal = self.chooseRandomGoalRev()
-                best_node_rev = self.chooseBestNodeRev(random_goal)
-                if best_node_rev:
-                    new_node_rev = self.extendRev(best_node_rev, random_goal)
-                    self.connect(new_node_rev, self.extend, self.chooseBestNode, 'reverse')
-
-        self.grow_iter_times +=1
-        if self.grow_iter_times > 1000:
-            self.grow_iter_times = 0
-
     # def biGrow(self):
-    #     '''
-    #     Bidirectional growth without connected heuristic
+    #     """
+    #     Bidirectional growth with connected heuristic
     #     :return:
-    #     '''
+    #     """
     #     # random sampling
-    #     if self.heur_path: # if heur_path is not empty, perform heuristic sampling. Extend only fwd tree.
+    #     if self.heur_path:  # if heur_path is not empty, perform heuristic sampling. Extend only fwd tree.
     #         # indicator = random.random()
     #         # if indicator > self.heur_prob:
     #         #     random_goal = self.heuristicSampling()
@@ -226,40 +294,54 @@ class BiRiskRRT(RiskRRT):
     #         best_node_fwd = self.chooseBestNode(random_goal)
     #         if best_node_fwd:
     #             new_node_fwd = self.extend(best_node_fwd, random_goal)
-    #             if self.euclideanDistance(new_node_fwd, self.root_rev) < self.heur_path[-1].cost:
-    #                 # print('pop()')
-    #                 self.heur_path.pop()
-    #
-    #     else: # if heur_path is empty, perform uniform random sampling. Extend fwd tree and rev tree.
-    #
-    #         if self.grow_iter_times % 2 == 0: # extend the forward tree first
+    #             # if new_node_fwd and self.euclideanDistance(new_node_fwd, self.root_rev) < self.heur_path[-1].cost:
+    #             #     # print('pop()')
+    #             #     self.heur_path.pop()
+    #     else:  # if heur_path is empty, perform uniform random sampling. Extend fwd tree and rev tree.
+    #         if self.grow_iter_times % 2 == 0:  # extend the forward tree first
     #             # extend the forward tree according to random_goal
     #             random_goal = self.chooseRandomGoal()
     #             best_node_fwd = self.chooseBestNode(random_goal)
     #             if best_node_fwd:
     #                 new_node_fwd = self.extend(best_node_fwd, random_goal)
-    #                 best_node_rev = self.chooseBestNodeRev(new_node_fwd.pose)
-    #                 if best_node_rev:
-    #                     new_node_rev = self.extendRev(best_node_rev, new_node_fwd.pose)
-    #                     if new_node_rev and new_node_fwd:
-    #                         if self.meet(new_node_fwd, new_node_rev):
-    #                             # self.terminate = True
-    #                             self.heur_path = self.getHeurTraj(new_node_rev)
-    #         else:
+    #                 self.connect(new_node_fwd, self.extendRev, self.chooseBestNodeRev, 'forward')
+    #         else:  # extend the reverse tree first
     #             random_goal = self.chooseRandomGoalRev()
     #             best_node_rev = self.chooseBestNodeRev(random_goal)
     #             if best_node_rev:
     #                 new_node_rev = self.extendRev(best_node_rev, random_goal)
-    #                 best_node_fwd = self.chooseBestNode(new_node_rev.pose)
-    #                 if best_node_fwd:
-    #                     new_node_fwd = self.extend(best_node_fwd, new_node_rev.pose)
-    #                     if new_node_rev and new_node_fwd:
-    #                         if self.meet(new_node_fwd, new_node_rev):
-    #                             # self.terminate = True
-    #                             self.heur_path = self.getHeurTraj(new_node_rev)
-    #     self.grow_iter_times +=1
+    #                 self.connect(new_node_rev, self.extend, self.chooseBestNode, 'reverse')
+    #
+    #     self.grow_iter_times += 1
     #     if self.grow_iter_times > 1000:
     #         self.grow_iter_times = 0
+
+    def bvp_biGrow(self):
+        """
+        Bidirectional growth with connected heuristic
+        :return: nothing
+        """
+        # random sampling
+        # perform uniform random sampling. Extend fwd tree and rev tree.
+        lqr_steer = LQRPlanner(self.timeStep)
+        if self.grow_iter_times % 2 == 0:  # extend the forward tree first
+            # extend the forward tree according to random_goal
+            random_goal = self.chooseRandomGoal()
+            best_node_fwd = self.chooseBestNode(random_goal)
+            if best_node_fwd:
+                new_node_fwd = self.extend(best_node_fwd, random_goal)
+                self.bvp_connect(new_node_fwd, self.extendRev, self.chooseBestNodeRev, 'forward',
+                                 lqr_steer)  # judge if the trees have met and linked
+        else:  # extend the reverse tree first
+            random_goal = self.chooseRandomGoalRev()
+            best_node_rev = self.chooseBestNodeRev(random_goal)
+            if best_node_rev:
+                new_node_rev = self.extendRev(best_node_rev, random_goal)
+                self.bvp_connect(new_node_rev, self.extend, self.chooseBestNode, 'reverse', lqr_steer)
+
+        self.grow_iter_times += 1
+        if self.grow_iter_times > 1000:
+            self.grow_iter_times = 0
 
     def getHeurTraj(self, meet_node):
         """
@@ -379,4 +461,3 @@ class BiRiskRRTPed(BiRiskRRT):
         :return:
         """
         self.trajectorReader.update_ogmap(self.ogmap, time)
-
