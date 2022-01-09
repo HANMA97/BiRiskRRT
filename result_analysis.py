@@ -5,9 +5,9 @@ import numpy as np
 # data_name = 'crowds_zara02'
 data_name = 'crowds_zara03'
 
-map_name = 'blank'
+# map_name = 'blank'
 # map_name = 'A'
-# map_name = 'B'
+map_name = 'B'
 # map_name = 'C'
 having_pedestrian = True
 # having_pedestrian = False

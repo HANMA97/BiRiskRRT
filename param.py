@@ -43,10 +43,10 @@ class Params:
         # wait for reassigning
         # self.start = [0.0, -11.5, 1.57] # A and blank
         # self.goal = [0.0, 11.5, -1.57] # A and blank
-        # self.start = [0.0, -11.5, 0.0]  # B
-        # self.goal = [0.0, 11.5, 0.0]  # B
-        self.start = [-11.5, -10.0, 0.0] # C
-        self.goal = [10.5, 10.0, math.pi] # C
+        self.start = [0.0, -11.5, 0.0]  # B
+        self.goal = [0.0, 11.5, 0.0]  # B
+        # self.start = [-11.5, -10.0, 0.0] # C
+        # self.goal = [10.5, 10.0, math.pi] # C
 
 
 class BiParams(Params):

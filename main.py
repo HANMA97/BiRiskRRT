@@ -6,7 +6,7 @@ import time
 import numpy as np
 import os
 
-data_name = 'crowds_zara01'
+data_name = 'crowds_zara03'
 root_path = os.getcwd()
 experiment_times = 100
 bidirectional = True
@@ -14,7 +14,7 @@ bidirectional = True
 having_pedestrian = True
 # having_pedestrian = False
 map_resolution = 0.054 # meter/pixel
-map_name = 'C' # prepare several maps with different names
+map_name = 'B' # prepare several maps with different names
 
 results_path = os.path.join(root_path, 'results')
 video_path = os.path.join(root_path, 'results', 'video')

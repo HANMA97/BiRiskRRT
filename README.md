@@ -143,24 +143,24 @@
 #### MapB, ' _crowds_zara03_'
 | Items | Means | Standard Error|
 | ----  | ----  | ----  |
-|Bidirectional time|  36.18 |  104.58 |
-|Bidirectional cost|  33.85 |  4.74 |
-|Bidirectional Navigation time|  25.55 |  4.38 |
-|Unidirectional time|  33.25 |  31.86 |
-|Unidirectional cost|  33.5 |  4.63 |
-|Navigation time|  26.1 |  3.38 |
+|Bidirectional time|  21.69 |  26.74 |
+|Bidirectional cost|  33.51 |  4.08 |
+|Bidirectional Navigation time|  25.44 |  3.97 |
+|Unidirectional time|  25.8 |  25.39 |
+|Unidirectional cost|  32.85 |  4.13 |
+|Navigation time|  24.98 |  2.74 |
 
 * Random Trees Visualization
 
-  * ![](results/visualizations/tree_B_crowds_zara03_5.png)
+  * ![](results/visualizations/tree_B_crowds_zara03_11.png)
   
-  * ![](results/visualizations/bitree_B_crowds_zara03_5.png)
+  * ![](results/visualizations/bitree_B_crowds_zara03_11.png)
 
 * Navigation Demo
 
-  * ![](results/video/navi_dynamic_B_crowds_zara035.gif)
+  * ![](results/video/navi_dynamic_B_crowds_zara0311.gif)
   
-  * ![](results/video/bi_navi_dynamic_B_crowds_zara035.gif)
+  * ![](results/video/bi_navi_dynamic_B_crowds_zara0311.gif)
 #### MapC, ' _crowds_zara01_'
 | Items | Means | Standard Error|
 | ----  | ----  | ----  |
