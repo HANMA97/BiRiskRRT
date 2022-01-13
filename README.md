@@ -232,16 +232,24 @@
 | ----  | ----  | ----  |
 |Bidirectional time|  19.67 |  15.18 |
 |Bidirectional cost|  43.89 |  6.62 |
-|Bidirectional Navigation time|  30.6 |  4.28 |
+|Bidirectional navigation time|  30.6 |  4.28 |
 |Unidirectional time|  42.44 |  72.96 |
 |Unidirectional cost|  44.53 |  6.74 |
 |Navigation time|  31.05 |  3.96 |
+|LQR-based time|  6.34 ||
+|LQR-based cost|  45.43 |   |
+|LQR-based navigation time|  38.62 |  |
 
 * Navigation Demo
 
   * ![](results/video/navi_static_A_crowds_zara0211.gif)
   
   * ![](results/video/bi_navi_static_A_crowds_zara0211.gif)
+  LQR-based Bi-RRT:
+  * ![](results/video/Anavi_static1.gif)
+ 
+  * ![](results/visualization/Abitree1.png)
+  
   
 #### MapB
 | Items | Means | Standard Error|
@@ -252,12 +260,18 @@
 |Unidirectional time|  13.23 |  13.73 |
 |Unidirectional cost|  32.94 |  4.28 |
 |Navigation time|  24.62 |  2.83 |
+|LQR-based time|  2.89 | |
+|LQR-based cost|  36.39 |   |
+|LQR-based navigation time|  32.58 |  |
 
 * Navigation Demo
 
   * ![](results/video/navi_static_B_crowds_zara0212.gif)
   
   * ![](results/video/bi_navi_static_B_crowds_zara0212.gif)
+  LQR-based Bi-RRT:
+  * ![](results/video/Bnavi_static1.gif)
+  * ![](results/visualization/Bbitree1.png)
   
 #### MapC
 | Items | Means | Standard Error|
@@ -268,12 +282,18 @@
 |Unidirectional time|  31.27 |  34.08 |
 |Unidirectional cost|  36.75 |  1.88 |
 |Navigation time|  24.36 |  1.99 |
+|LQR-based time|  5.93 |   |
+|LQR-based cost| 45.19 |   |
+|LQR-based navigation time|  35.62 |  |
 
 * Navigation Demo
 
   * ![](results/video/navi_static_C_crowds_zara0213.gif)
   
   * ![](results/video/bi_navi_static_C_crowds_zara0213.gif)
+  LQR-based Bi-RRT:
+  * ![](results/video/Cnavi_static1.gif)
+  * ![](results/visualization/Cbitree3.png)
   
 ### Current Results (Only Dynamic Obstacles)
 
