@@ -245,10 +245,11 @@
   * ![](results/video/navi_static_A_crowds_zara0211.gif)
   
   * ![](results/video/bi_navi_static_A_crowds_zara0211.gif)
+  
   LQR-based Bi-RRT:
   * ![](results/video/Anavi_static1.gif)
  
-  * ![](results/visualization/Abitree1.png)
+  * ![](results/static/Abitree1.png)
   
   
 #### MapB
@@ -269,9 +270,10 @@
   * ![](results/video/navi_static_B_crowds_zara0212.gif)
   
   * ![](results/video/bi_navi_static_B_crowds_zara0212.gif)
+  
   LQR-based Bi-RRT:
   * ![](results/video/Bnavi_static1.gif)
-  * ![](results/visualization/Bbitree1.png)
+  * ![](results/static/Bbitree1.png)
   
 #### MapC
 | Items | Means | Standard Error|
@@ -291,9 +293,10 @@
   * ![](results/video/navi_static_C_crowds_zara0213.gif)
   
   * ![](results/video/bi_navi_static_C_crowds_zara0213.gif)
+  
   LQR-based Bi-RRT:
   * ![](results/video/Cnavi_static1.gif)
-  * ![](results/visualization/Cbitree3.png)
+  * ![](results/static/Cbitree3.png)
   
 ### Current Results (Only Dynamic Obstacles)
 
