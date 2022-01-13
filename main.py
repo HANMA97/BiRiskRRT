@@ -6,19 +6,19 @@ import time
 import numpy as np
 import os
 
-data_name = 'static01'
+data_name = 'static_mapA'
 root_path = os.getcwd()
-experiment_times = 1
+experiment_times = 10
 bidirectional = True
 # bidirectional = False
 having_pedestrian = False
 # having_pedestrian = False
-map_resolution = 0.054 # meter/pixel
+map_resolution = 0.054  # meter/pixel
 
 results_path = os.path.join(root_path, 'results')
 video_path = os.path.join(root_path, 'results', 'video')
 visualization_path = os.path.join(results_path, 'visualizations')
-map_path = os.path.join(root_path, 'maps/map.png')
+map_path = os.path.join(root_path, 'maps/A.png')  #
 if having_pedestrian:
     print('having pedestrians')
     results_path = os.path.join(results_path, 'dynamic')
@@ -48,7 +48,7 @@ for i in range(experiment_times):
             planner.grow()
         # cv2.imwrite('/home/mh/Desktop/bitree.png', planner.ogmap.map)
         if planner.terminate:
-            print('two trees are linked!')
+            # print('two trees are linked!')
             break
     end = time.time()
 
@@ -56,16 +56,16 @@ for i in range(experiment_times):
     traj = planner.findlinkedTraj()
     if bidirectional:
         bi_time_list.append(end - start)
-        bi_cost_list.append(traj[-1].cost)
-        bi_nav_time.append(planner.goal_node.time)
+        bi_cost_list.append(planner.total_cost)
+        bi_nav_time.append(planner.total_nav_time)
     else:
         time_list.append(end - start)
         cost_list.append(traj[-1].cost)
         nav_time.append(planner.goal_node.time)
 
     print('Planning time: ', end - start)
-    print('Trajectory cost: ', traj[-1].cost)
-    print('Trajectory navigation time: ', planner.goal_node.time)
+    print('Trajectory cost: ', planner.total_cost)
+    print('Trajectory navigation time: ', planner.total_nav_time)
     if having_pedestrian:
         generateSimulationVideo(traj, planner.ogmap,
                                 os.path.join(video_path, 'navi_dynamic' + str(i) + '.gif'),
@@ -73,7 +73,7 @@ for i in range(experiment_times):
                                 mode='dynamic')
     else:
         generateSimulationVideo(traj, planner.ogmap,
-                                os.path.join(video_path, 'navi_static' + str(i) + '.gif'),
+                                os.path.join(video_path, 'Anavi_static' + str(i) + '.gif'),
                                 trajReader=planner.trajectorReader,
                                 mode='static')
     for node in traj:
@@ -89,14 +89,14 @@ for i in range(experiment_times):
             planner.ogmap.map = cv2.circle(planner.ogmap.map, center_coordinates, 5, [255, 0, 255], -1)
         # print(node.pose)
     if bidirectional:
-        cv2.imwrite(visualization_path + '/bitree' + str(i) + '.png', planner.ogmap.map)
+        cv2.imwrite(visualization_path + '/Abitree' + str(i) + '.png', planner.ogmap.map)
     else:
         cv2.imwrite(visualization_path + '/tree' + str(i) + '.png', planner.ogmap.map)
 
 if bidirectional:
-    np.save(os.path.join(results_path, 'bi_time_list.npy'), bi_time_list)
-    np.save(os.path.join(results_path, 'bi_cost_list.npy'), bi_cost_list)
-    np.save(os.path.join(results_path, 'bi_nav_list.npy'), bi_nav_time)
+    np.save(os.path.join(results_path, 'Abi_time_list.npy'), bi_time_list)  #
+    np.save(os.path.join(results_path, 'Abi_cost_list.npy'), bi_cost_list)  #
+    np.save(os.path.join(results_path, 'Abi_nav_list.npy'), bi_nav_time)  #
 else:
     np.save(os.path.join(results_path, 'time_list.npy'), time_list)
     np.save(os.path.join(results_path, 'cost_list.npy'), cost_list)

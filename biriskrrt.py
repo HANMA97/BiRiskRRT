@@ -44,6 +44,8 @@ class BiRiskRRT(RiskRRT):
         self.total_traj = []
         self.data_name = data_name
         self.trajectorReader = TrajReader(data_name, self.timeStep)
+        self.total_cost = 0
+        self.total_nav_time = 0
 
     def initRootRev(self):
         self.root_rev.time = 0.0
@@ -216,6 +218,30 @@ class BiRiskRRT(RiskRRT):
                                                             new_node)  # return linearized kinodynamic states between them
                 if rx is not None:
                     middling_nodes = [new_node_prim]
+                    # middling_node = Node()
+                    # middling_node.pose = Custom_pose()
+                    # middling_node.pose.x = (new_node_prim.pose.x + rx[2])/2
+                    # middling_node.pose.y = (new_node_prim.pose.y + ry[2])/2
+                    # middling_node.pose.theta = (new_node_prim.pose.theta + rt[2])/2
+                    #
+                    # vx=(new_node_prim.vel.linear.x_vel + rv[2] * np.cos(rt[2]))/2
+                    # vy=(new_node_prim.vel.linear.y_vel + rv[2] * np.sin(rt[2]))/2
+                    # ang=(new_node_prim.vel.angular+rv[2] * rk[2])/2
+                    # middling_node.vel = Twist(Linear(vx,vy),ang)
+                    # middling_node.parent = middling_nodes[0]
+                    # middling_node.sons = []
+                    # middling_node.possible_controls = []
+                    # middling_node.isOpen = False
+                    # middling_node.depth = middling_nodes[0].depth + 1
+                    # middling_node.time = middling_nodes[0].time + self.timeStep
+                    # middling_node.cost = self.euclideanDistance(middling_node, middling_nodes[0]) + \
+                    #                      middling_nodes[0].cost
+                    # middling_node.risk = self.computeNodeRisk(middling_node)
+                    # middling_node.isFree = (middling_node.risk <= self.threshold)
+                    # middling_nodes[0].sons.append(middling_node)
+                    # a = copy.deepcopy(middling_node)
+                    # middling_nodes.append(a)
+                    # new_node_prim.sons.append(middling_nodes[1])
                     for j in range(1, len(rx)):
                         middling_node = Node()
                         middling_node.pose = Custom_pose()
@@ -237,11 +263,13 @@ class BiRiskRRT(RiskRRT):
                         middling_nodes[j - 1].sons.append(middling_node)
                         a = copy.deepcopy(middling_node)
                         middling_nodes.append(a)
-                    new_node_prim.sons.append(middling_nodes[1])
                     self.last_node_of_f_tree = middling_nodes[-2]
                     self.last_node_of_r_tree = new_node
                     self.flip_r_tree(self.last_node_of_f_tree, self.last_node_of_r_tree)
-                self.terminate = True
+                    self.total_cost = middling_nodes[-1].cost + new_node.cost
+                    self.total_nav_time = middling_nodes[-1].time + new_node.time
+                    self.terminate = True
+                    break
             else:
                 break
             if not new_node_prim:
