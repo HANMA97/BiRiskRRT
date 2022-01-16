@@ -1,4 +1,4 @@
-# BiRiskRRTValidation
+# BiRiskRRT
 
 ### _*.py_ Files Explanation
 
@@ -18,7 +18,7 @@
   * run the planners multiple times and record the statistic results into 'results' folder.
 
 * _result_analysis.py_
-  * compute and print the mean values and standard values of the trails conducted by _main.py_.
+  * compute and print the mean values and standard errors of the trails conducted by _main.py_.
 ***************************
 ### Folders Introduction
 
@@ -34,7 +34,7 @@
   * ___/static___ is for tests without dynamic obstacles.
 
 ************************************
-### Current Results (Dynamic '_crowds_zara01_, _crowds_zara02_, _crowds_zara03_')
+### Results (Dynamic '_crowds_zara01_, _crowds_zara02_, _crowds_zara03_')
 #### Map A, '_crowds_zara01_'
 | Items | Means | Standard Error|
 | ----  | ----      | ----  |
@@ -226,6 +226,80 @@
   * ![](results/video/navi_dynamic_C_crowds_zara0317.gif)
   
   * ![](results/video/bi_navi_dynamic_C_crowds_zara0317.gif)
+<<<<<<< HEAD
+=======
+### Current Results (Static)
+#### MapA
+| Items | Means | Standard Error|
+| ----  | ----  | ----  |
+|Bidirectional time|  19.67 |  15.18 |
+|Bidirectional cost|  43.89 |  6.62 |
+|Bidirectional navigation time|  30.6 |  4.28 |
+|Unidirectional time|  42.44 |  72.96 |
+|Unidirectional cost|  44.53 |  6.74 |
+|Navigation time|  31.05 |  3.96 |
+|LQR-based time|  6.34 ||
+|LQR-based cost|  45.43 |   |
+|LQR-based navigation time|  38.62 |  |
+
+* Navigation Demo
+
+  * ![](results/video/navi_static_A_crowds_zara0211.gif)
+  
+  * ![](results/video/bi_navi_static_A_crowds_zara0211.gif)
+  
+  LQR-based Bi-RRT (Failed):
+  * ![](results/video/Anavi_static1.gif)
+ 
+  * ![](results/static/Abitree1.png)
+  
+  
+#### MapB
+| Items | Means | Standard Error|
+| ----  | ----  | ----  |
+|Bidirectional time|  8.52 |  8.44 |
+|Bidirectional cost|  32.19 |  3.47 |
+|Bidirectional Navigation time|  24.18 |  3.51 |
+|Unidirectional time|  13.23 |  13.73 |
+|Unidirectional cost|  32.94 |  4.28 |
+|Navigation time|  24.62 |  2.83 |
+|LQR-based time|  2.89 | |
+|LQR-based cost|  36.39 |   |
+|LQR-based navigation time|  32.58 |  |
+
+* Navigation Demo
+
+  * ![](results/video/navi_static_B_crowds_zara0212.gif)
+  
+  * ![](results/video/bi_navi_static_B_crowds_zara0212.gif)
+  
+  LQR-based Bi-RRT (Failed):
+  * ![](results/video/Bnavi_static1.gif)
+  * ![](results/static/Bbitree1.png)
+  
+#### MapC
+| Items | Means | Standard Error|
+| ----  | ----  | ----  |
+|Bidirectional time|  17.33 |  25.31 |
+|Bidirectional cost|  36.18 |  1.59 |
+|Bidirectional Navigation time|  24.83 |  2.0 |
+|Unidirectional time|  31.27 |  34.08 |
+|Unidirectional cost|  36.75 |  1.88 |
+|Navigation time|  24.36 |  1.99 |
+|LQR-based time|  5.93 |   |
+|LQR-based cost| 45.19 |   |
+|LQR-based navigation time|  35.62 |  |
+
+* Navigation Demo
+
+  * ![](results/video/navi_static_C_crowds_zara0213.gif)
+  
+  * ![](results/video/bi_navi_static_C_crowds_zara0213.gif)
+  
+  LQR-based Bi-RRT (Failed):
+  * ![](results/video/Cnavi_static1.gif)
+  * ![](results/static/Cbitree3.png)
+>>>>>>> f4e119d0c09ad1ed5e170e7efcc3c475475a0079
   
 ### Current Results (Only Dynamic Obstacles)
 
