@@ -1,4 +1,4 @@
-# BiRiskRRTValidation
+# BiRiskRRT
 
 ### _*.py_ Files Explanation
 
@@ -18,7 +18,7 @@
   * run the planners multiple times and record the statistic results into 'results' folder.
 
 * _result_analysis.py_
-  * compute and print the mean values and standard values of the trails conducted by _main.py_.
+  * compute and print the mean values and standard errors of the trails conducted by _main.py_.
 ***************************
 ### Folders Introduction
 
@@ -34,7 +34,7 @@
   * ___/static___ is for tests without dynamic obstacles.
 
 ************************************
-### Current Results (Dynamic '_crowds_zara01_, _crowds_zara02_, _crowds_zara03_')
+### Results (Dynamic '_crowds_zara01_, _crowds_zara02_, _crowds_zara03_')
 #### Map A, '_crowds_zara01_'
 | Items | Means | Standard Error|
 | ----  | ----      | ----  |
@@ -246,7 +246,7 @@
   
   * ![](results/video/bi_navi_static_A_crowds_zara0211.gif)
   
-  LQR-based Bi-RRT:
+  LQR-based Bi-RRT (Failed):
   * ![](results/video/Anavi_static1.gif)
  
   * ![](results/static/Abitree1.png)
@@ -271,7 +271,7 @@
   
   * ![](results/video/bi_navi_static_B_crowds_zara0212.gif)
   
-  LQR-based Bi-RRT:
+  LQR-based Bi-RRT (Failed):
   * ![](results/video/Bnavi_static1.gif)
   * ![](results/static/Bbitree1.png)
   
@@ -294,7 +294,7 @@
   
   * ![](results/video/bi_navi_static_C_crowds_zara0213.gif)
   
-  LQR-based Bi-RRT:
+  LQR-based Bi-RRT (Failed):
   * ![](results/video/Cnavi_static1.gif)
   * ![](results/static/Cbitree3.png)
   
